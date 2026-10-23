@@ -1,0 +1,39 @@
+# ---- Maven build output ----
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ---- Compiled / packaged artifacts ----
+*.class
+*.jar
+*.war
+*.log
+
+# ---- IDE files ----
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+*.swp
+
+# ---- OS junk ----
+.DS_Store
+Thumbs.db
+
+# ---- Secrets: never commit these ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+secrets/
+credentials*
+
+# ---- Misc ----
+*.tmp
+*.bak
+
+pass.txt
