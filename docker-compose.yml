@@ -1,0 +1,39 @@
+services:
+  calculator:
+    build: .
+    image: ${DOCKERHUB_USER:-local}/calculator:${IMAGE_TAG:-latest}
+    environment:
+      - SERVER_PORT=8080
+      - JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/actuator/health | grep -q UP || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 25s
+    restart: unless-stopped
+    deploy:
+      replicas: 2
+    networks:
+      - backend
+
+  nginx:
+    build: ./nginx
+    image: ${DOCKERHUB_USER:-local}/calculator-nginx:${IMAGE_TAG:-latest}
+    ports:
+      - "8090:80"
+    depends_on:
+      calculator:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/nginx-health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
